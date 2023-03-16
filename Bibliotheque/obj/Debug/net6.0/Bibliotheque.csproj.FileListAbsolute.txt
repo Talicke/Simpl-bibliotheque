@@ -1,0 +1,15 @@
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\bin\Debug\net6.0\Bibliotheque.exe
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\bin\Debug\net6.0\Bibliotheque.deps.json
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\bin\Debug\net6.0\Bibliotheque.runtimeconfig.json
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\bin\Debug\net6.0\Bibliotheque.dll
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\bin\Debug\net6.0\Bibliotheque.pdb
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.csproj.AssemblyReference.cache
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.AssemblyInfoInputs.cache
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.AssemblyInfo.cs
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.csproj.CoreCompileInputs.cache
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.dll
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\refint\Bibliotheque.dll
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.pdb
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\Bibliotheque.genruntimeconfig.cache
+C:\Users\Taliq\OneDrive\Documents\Codage\Bibliotheque\Bibliotheque\obj\Debug\net6.0\ref\Bibliotheque.dll
