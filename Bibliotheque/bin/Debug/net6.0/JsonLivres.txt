@@ -1,0 +1,1 @@
+{"LivreA":{"Titre":"LivreA","Genre":"SF","Collection":"BD","Auteur":{"Nom":"AuteurA","Prenom":"AutA"}},"LivreB":{"Titre":"LivreB","Genre":"Polar","Collection":"Poche","Auteur":{"Nom":"AuteurB","Prenom":"AutB"}},"LivreC":{"Titre":"LivreC","Genre":"Eau de rose","Collection":"Hérésie","Auteur":{"Nom":"AuteurA","Prenom":"AutA"}}}

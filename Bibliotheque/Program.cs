@@ -1,89 +1,72 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using Bibliotheque;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
+
 
 string exit = "";
 
-Dictionary<string, Emprunteur> emprunteurs = new Dictionary<string, Emprunteur>();
-Dictionary<string, Auteur> auteurs = new Dictionary<string, Auteur>();
-Dictionary<string, Livre> livres = new Dictionary<string, Livre>();
-Dictionary<string, Stock> stocks = new Dictionary<string, Stock>();
 
+CLI cli = new CLI();
 
 while (exit != "exit")
 {
+    Data.loadData();
+
     Console.WriteLine("Que souhaitez vous faire ? ");
-    Console.WriteLine("AjouterEmprunteur | AjouterAuteur | AjouterLivre | ModifierStock | ConsulterStock | Exit ");
+    Console.WriteLine("AjouterEmprunteur | AjouterAuteur | AjouterLivre | ConsulterStock | CreerEmprunt | ConsulterEmprunt | Exit ");
 
     string souhait = Console.ReadLine();
 
     switch (souhait)
     {
         case "AjouterEmprunteur":
-            Console.Write("nom : ");
-            string nomEmp = Console.ReadLine();
-            Console.Write("prenom : ");
-            string prenomEmp = Console.ReadLine();
-            Console.Write("N° tel :  ");
-            string telEmp = Console.ReadLine();
-            Console.Write("Adresse : ");
-            string adresseEmp = Console.ReadLine();
-            Emprunteur emp = new Emprunteur(nomEmp, prenomEmp, telEmp, adresseEmp);
-
-            emp.ajouterEmprunteur(emprunteurs);
-
+            cli.creerEmprunteur().ajouterEmprunteur(Data.emprunteurs);
             break;
 
         case "AjouterAuteur":
-            Console.Write("nom : ");
-            string nomAut = Console.ReadLine();
-            Console.Write("prenom : ");
-            string prenomAut = Console.ReadLine();
-            Auteur aut = new Auteur(nomAut, prenomAut);
-
-            aut.ajouterAuteur(auteurs);
+                   
+               cli.creerAuteur().ajouterAuteur(Data.auteurs);
             break;
 
         case "AjouterLivre":
-            Console.Write("Titre : ");
-            string titreLivre = Console.ReadLine();
-            Console.Write("Genre : ");
-            string genreLivre = Console.ReadLine();
-            Console.Write("Collection : ");
-            string collectionLivre = Console.ReadLine();
-            Console.WriteLine("Ce livre est-il d'un Auteur enregistrer");
-            foreach (KeyValuePair<string, Auteur> auteur in auteurs)
-                {
-                Console.WriteLine(auteur.Key + " -");
-                }
-            Console.WriteLine("Ecrivez le nom de l'auteur existant sinon écrivez Nouveau");
+
+            Livre newLivre = cli.creerLivre();
+
+            foreach (KeyValuePair<string, Auteur> auteur in Data.auteurs)
+            {
+                Console.WriteLine(auteur.Key);
+            }
+            Console.WriteLine("Ecrivez le nom de l'auteur existant sinon écrivez : 'Nouveau'");
+
             string AuteurValue = Console.ReadLine();
+
             switch (AuteurValue)
             {
                 case "Nouveau":
-                    Console.Write("nom : ");
-                    string nomNewAut = Console.ReadLine();
-                    Console.Write("prenom : ");
-                    string prenomNewAut = Console.ReadLine();
-                    Auteur newAut = new Auteur(nomNewAut, prenomNewAut);
-
-                    newAut.ajouterAuteur(auteurs);
-                    Livre livreNewAut = new Livre(titreLivre, genreLivre, collectionLivre, newAut);
-                    livreNewAut.ajouterLivre(livres);
-                    Stock stockLivreNewAut = new Stock(0, 100, livreNewAut);
-                    stockLivreNewAut.ajouterStock(stocks);
+                    Auteur newAut = cli.creerAuteur();
+                    newAut.ajouterAuteur(Data.auteurs);
+                    newLivre.Auteur = newAut;
+                    newLivre.ajouterLivre(Data.livres);
+                    Console.WriteLine("Combien ?");
+                    int nbStockLivre = int.Parse(Console.ReadLine());
+                    Stock stockLivres = new Stock(nbStockLivre, 100, newLivre);
+                    stockLivres.ajouterStock(Data.stocks);
 
                     break;
+
                 default:
-                    if (auteurs.ContainsKey(AuteurValue))
+                    if (Data.auteurs.ContainsKey(AuteurValue))
                     {
-                        Livre livreOldAut = new Livre(titreLivre, genreLivre, collectionLivre, auteurs[AuteurValue]);
-                        livreOldAut.ajouterLivre(livres);
-                        Stock stockLivreOldAut = new Stock(0, 100, livreOldAut);
-                        stockLivreOldAut.ajouterStock(stocks);
+                        newLivre.Auteur = Data.auteurs[AuteurValue];
+                        newLivre.ajouterLivre(Data.livres);
+                        Console.WriteLine("Combien ?");
+                        int nbStockLivre2 = int.Parse(Console.ReadLine());
+                        Stock stockLivres2 = new Stock(nbStockLivre2, 100, newLivre);
+                        stockLivres2.ajouterStock(Data.stocks);
                     }
                     else
                     {
@@ -93,81 +76,184 @@ while (exit != "exit")
             }
             break;
 
-        case "ModifierStock":
-            Console.WriteLine("à quel livre voulez vous modifiez le stock");
-            foreach (KeyValuePair<string, Livre> livre in livres)
-            {
-                Console.WriteLine(livre.Key + " -");
-            }
+
+        case "ConsulterStock":
+            Console.WriteLine("de quel livre consulter le stock? ");
+
+            Console.WriteLine(cli.afficherstock());
+
             Console.WriteLine("Entrez le titre du livre souhaitez, Si il n'est pas présent écrivez Exit et AjouterLivre");
+
             string livreValue = Console.ReadLine();
+
             switch (livreValue)
             {
                 case "exit":
                     break;
                 default:
-                    if (stocks.ContainsKey(livreValue))
+                    if (Data.stocks.ContainsKey(livreValue))
                     {
-                        Console.WriteLine($"Voici l'état des stocks de {livreValue} {stocks[livreValue].nbStock} / {stocks[livreValue].nbTotal}");
-                        Console.WriteLine("De combien voulez vous changer le stock");
-                        int balance = int.Parse(Console.ReadLine());
-                        stocks[livreValue].modifierStock(stocks, balance);
-                        Console.WriteLine($"Le nouveau stock de {stocks[livreValue].Livre.Titre} est de {stocks[livreValue].nbStock} / {stocks[livreValue].nbTotal} ");
+                        Console.WriteLine($"Voici l'état des stocks de {livreValue} {Data.stocks[livreValue].nbStock} / {Data.stocks[livreValue].nbTotal}");
+                        Console.WriteLine("Que souhaitez vous faire ? (Exit | ModifierStock)");
+                     
+                        string inputStock = Console.ReadLine();
+
+                        if (inputStock == "exit")
+                        {
+                            break;
+                        }
+                        else if (inputStock == "ModifierStock")
+                        {
+                            Console.WriteLine("Quel livre ? (titre du livre)");
+                            string stockLivre = Console.ReadLine();
+                            if (Data.stocks.ContainsKey(stockLivre))
+                            {
+                                Stock stock = Data.stocks[stockLivre];
+                                Console.WriteLine("De combien voulez vous changer le stock");
+                                int balance = int.Parse(Console.ReadLine());
+                                stock.modifierStock(Data.stocks, balance);
+                                Console.WriteLine($"Le nouveau stock de {stock.Livre.Titre} est de {stock.nbStock} / {stock.nbTotal} ");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Je suis désolé, je n'est pas compris votre demande");
+                        break;
                     }
                     break;
-            }
-           
 
+                    
+            }
             break;
 
-        case "ConsulterStock":
-            Console.WriteLine("Pour quel livre voulez vous consulter le stock");
-            foreach (KeyValuePair<string, Livre> livre in livres)
-                {
-                    Console.WriteLine(livre.Key);
-                }
-            Console.WriteLine("Ecrivez le titre du livre concernez");
-            string stockLivre = Console.ReadLine();
-            if (stocks.ContainsKey(stockLivre))
+        case "CreerEmprunt":
+            
+            Console.WriteLine(cli.afficherEmprunteurs());
+            Console.WriteLine("Qui emprunte le livre ? Sinon écrire Nouveau");
+            string empValue = Console.ReadLine();
+            Emprunteur Emp;
+            if (empValue == "Nouveau")
             {
-                Console.WriteLine($"le stock de {stockLivre} est de : {stocks[stockLivre].nbStock} /{stocks[stockLivre].nbTotal}");
+                Emp = cli.creerEmprunteur();
+                Emp.ajouterEmprunteur(Data.emprunteurs);
             }
+            else
+            {
+                if (Data.emprunteurs.ContainsKey(empValue))
+                {
+                    Emp = Data.emprunteurs[empValue];
+                }
+                else
+                {
+                    Console.WriteLine($"Désolé, {empValue} n'est pas dans notre base de données");
+                    break;
+                }
+            }
+            List<Livre> livreEmp = new List<Livre>();
+            string inputValueLivre = "";
+            while (inputValueLivre != "Stop")
+            {
+                Console.WriteLine("Quel livre emprunte t'il ? pour arreter écrivez Stop");
+                Console.WriteLine(cli.afficherLivres());
+                inputValueLivre = Console.ReadLine();
+                if(inputValueLivre != "Stop")
+                {
+                    if(Data.livres.ContainsKey(inputValueLivre))
+                    {
+                        if (Data.stocks.ContainsKey(inputValueLivre)) 
+                        {
+                            if (Data.stocks[inputValueLivre].nbStock > 0)
+                            {
+
+                                livreEmp.Add(Data.livres[inputValueLivre]);
+                                Data.stocks[inputValueLivre].nbStock--;
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Désolé il n'y as plus aucun livre {inputValueLivre} en stock");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Désolé aucun stock n'existe pour {inputValueLivre}");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Désolé {inputValueLivre} n'est pas dans la base de données");
+                    }
+                }
+                else
+                {
+                    Emprunt emprunt = new Emprunt(Emp, livreEmp, DateOnly.FromDateTime(DateTime.Now));
+                    emprunt.ajouterEmprunt(Data.emprunts);
+                }
+            }
+
             break;
 
+        case "ConsulterEmprunt":
+            Console.WriteLine(cli.afficherEmprunt());
+            Console.WriteLine("Quel Emprunt ? ");
+            string inputValueEmprunt = Console.ReadLine();
+            if(Data.emprunts.ContainsKey(inputValueEmprunt))
+            {
+                Emprunt emprunt = Data.emprunts[inputValueEmprunt];
+                Console.WriteLine($"Mr {emprunt.emprunteur.Nom}{emprunt.emprunteur.Prenom} à emprunter le : {emprunt.dateDebut}");
+                Console.WriteLine("Il à en sa posession les livres : ");
+                foreach(Livre livre in emprunt.livres)
+                {
+                    Console.WriteLine(livre.Titre);
+                }
+                Console.WriteLine($"Il doit les rendre le : {emprunt.dateFin}");
+            }
 
+            break;
 
         case "Exit":
-            exit = "exit";
+            Console.WriteLine("Voulez-vous vraiment Quittez ? (Oui/Non) ");
+            string confirmationValue = Console.ReadLine();
+            switch (confirmationValue)
+            {
+                case "Oui":
+                    if (Data.saveBeforeLeave())
+                    {
+                        exit = "exit";
+                        break;  
+                    }
+                    else
+                    {
+                        Console.Write("un problème est survenue pendant la sauvegarde des données si vous quittez maintenant tout les modifications seront perduent.");
+                        Console.WriteLine("Continuer ? (Oui/Non)");
+                        confirmationValue = Console.ReadLine();
+                        if( confirmationValue == "Oui")
+                        {
+                            exit = "exit";
+                        }
+                        else
+                        {
+                          break;
+                        }
+                    }
+                    break;
+
+                    
+                case "Non":
+                    break;
+                default:
+                    Console.WriteLine("Désolé je n'ai pas compris votre requête");
+                    break;   
+            }
             break;
 
         default:
             Console.WriteLine("Désolé je n\'ai pas compris votre requête.");
             break;
-    }
 
-    /*
-    foreach (KeyValuePair<string, Emprunteur> emprunteur in emprunteurs)
-    {
-        Console.WriteLine(emprunteur.Key + " : " + emprunteur.Value.Prenom);
-    }
-
-    foreach (KeyValuePair<string, Auteur> auteur in auteurs)
-    {
-        Console.WriteLine(auteur.Key + " : " + auteur.Value.Prenom);
+    
     }
     
-
-    foreach (KeyValuePair<string, Livre> livre in livres)
-    {
-        Console.WriteLine(livre.Key + " : " + livre.Value.Auteur.Nom);
-    }
-
-    foreach (KeyValuePair<string, Stock> stock in stocks)
-    {
-        Console.WriteLine(stock.Key + " : " + stock.Value.nbStock);
-    }
-    */
-
 
 }
 

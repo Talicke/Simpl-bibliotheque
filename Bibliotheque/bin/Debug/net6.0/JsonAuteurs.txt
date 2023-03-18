@@ -1,0 +1,1 @@
+{"AuteurA":{"Nom":"AuteurA","Prenom":"AutA"},"AuteurB":{"Nom":"AuteurB","Prenom":"AutB"}}

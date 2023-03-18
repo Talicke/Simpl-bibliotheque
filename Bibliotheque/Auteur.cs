@@ -9,7 +9,7 @@ namespace Bibliotheque
     internal class Auteur : Personne
     {
      
-        public Auteur(string nom, string prenom) : base()
+        public Auteur(string? nom, string? prenom) : base()
         {
             this.Nom = nom;
             this.Prenom = prenom;

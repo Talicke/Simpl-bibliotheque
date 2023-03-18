@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "gTqvzeWhcMLMZqWf+Erq1FgwOQo8vixlhZ7DZPo5RXs7AG6O/nHsNnhJkgnkelHzFK1nEDYqDD3/psuCZmxiAg==",
+  "dgSpecHash": "skyfrHMunwBA8sUS9niz5QuMnPCCqAvy5Q2ZMPsJ/48AOrDGuFLkRfKUx/qVcmAyHc1XvuvJRuY6BtidOWBJmQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Taliq\\OneDrive\\Documents\\Codage\\Bibliotheque\\Bibliotheque\\Bibliotheque.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Taliq\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }

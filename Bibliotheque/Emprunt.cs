@@ -8,24 +8,25 @@ namespace Bibliotheque
 {
     internal class Emprunt
     {
-        Livre livre { get; set; }
-        Emprunteur emprunteur { get; set; }
-        DateOnly dateFin { get; set; }
-        DateOnly dateDebut { get; set; }
+        public List<Livre> livres { get; set; }
+        public Emprunteur emprunteur { get; set; }
+        public DateOnly dateFin { get; set; }
+        public DateOnly dateDebut { get; set; }
         
-        public Emprunt(Livre livre, Emprunteur emprunteur, DateOnly dateFin, DateOnly dateDebut)
+        public Emprunt(Emprunteur emprunteur, List<Livre> livres, DateOnly dateDebut)
         {
-            this.livre = livre;
+            this.livres = livres;
             this.emprunteur = emprunteur;
-            this.dateFin = dateFin;
             this.dateDebut = dateDebut;
+            this.dateFin = this.dateDebut.AddDays(15);
         }
 
         public void ajouterEmprunt(Dictionary<string, Emprunt> emprunts)
         {
-
+            emprunts.Add(this.emprunteur.Nom, this);
         }
 
+        /*
         public string[] empruntEnCoursParEmprunteur(Dictionary<string, Emprunt> dict,  Emprunteur emprunteur)
         {
             string[] listeEmprunt = {};
@@ -37,6 +38,6 @@ namespace Bibliotheque
             string[] listeEmprunt = {};
             return listeEmprunt;
         }
-    
+        */
     }
 }
